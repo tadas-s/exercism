@@ -1,8 +1,16 @@
-pub fn reply(question: &str) -> &str {
-    match question {
-        "Let's go make out behind the gym!" | "Tom-ay-to, tom-aaaah-to." | "Ending with ? means a question." => "Whatever.",
-        "WATCH OUT!" | "1, 2, 3 GO!" | "ZOMG THE %^*@#$(*^ ZOMBIES ARE COMING!!11!!1!" | "I HATE YOU" => "Whoa, chill out!",
-        "Does this cryogenic chamber make me look fat?" => "Sure.",
-        "" | _ => "Fine. Be that way!"
+pub fn reply(phrase: &str) -> &str {
+    match phrase {
+        "" => "Fine. Be that way!",
+        _ if is_shouting(phrase) => "Whoa, chill out!",
+        _ if is_question(phrase) => "Sure.",
+        _ => "Whatever."
     }
+}
+
+fn is_shouting(phrase: &str) -> bool {
+    !phrase.is_empty() && phrase == phrase.to_uppercase()
+}
+
+fn is_question(phrase: &str) -> bool {
+    phrase.chars().last().unwrap_or('-') == '?'
 }
