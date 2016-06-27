@@ -1,14 +1,24 @@
 pub fn verse(verse: u8) -> String {
-   format!(
-       "{} of beer on the wall, {} of beer on the wall\nGo to the store and buy some more, {} bottles of beer on the wall.",
-       pluralize_bottle_pile_of(verse),
-       pluralize_bottle_pile_of(verse),
-       pluralize_bottle_pile_of(next(verse))
-   )
+    format!("{}\n{}\n", line(verse * 2), line(verse * 2 + 1))
 }
 
-pub fn sing(from_verse: u8, to_verse: u8) -> String {
-    "".to_string()
+pub fn sing(start_with: u8, end_with: u8) -> String {
+    let mut verses = Vec::new();
+    for v in (end_with..start_with + 1).rev() { 
+        verses.push(verse(v));
+    }
+    verses.join("\n")
+}
+
+fn line(line: u8) -> String {
+    match line {
+        0 => "No more bottles of beer on the wall, no more bottles of beer.".to_string(),
+        1 => "Go to the store and buy some more, 99 bottles of beer on the wall.".to_string(),
+        3 => "Take it down and pass it around, no more bottles of beer on the wall.".to_string(),
+        _ if line % 2 == 0 => format!("{} of beer on the wall, {} of beer.", pluralize_bottle_pile_of(line / 2), pluralize_bottle_pile_of(line / 2)),
+        _ if line % 2 == 1 => format!("Take one down and pass it around, {} of beer on the wall.", pluralize_bottle_pile_of(line / 2 - 1)),
+        _ => panic!("This will never happen. This also looks like not a great code as well.")
+    }
 }
 
 fn pluralize_bottle_pile_of(number: u8) -> String {
@@ -19,6 +29,3 @@ fn pluralize_bottle_pile_of(number: u8) -> String {
     }
 }
 
-fn next(n: u8) -> u8 {
-    if n > 0 { n - 1 } else { 99 }
-}
