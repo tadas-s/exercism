@@ -3,11 +3,11 @@ pub fn verse(verse: u8) -> String {
 }
 
 pub fn sing(start_with: u8, end_with: u8) -> String {
-    let mut verses = Vec::new();
-    for v in (end_with..start_with + 1).rev() { 
-        verses.push(verse(v));
-    }
-    verses.join("\n")
+    (end_with..start_with + 1)
+        .rev()
+        .map(verse)
+        .collect::<Vec<String>>()
+        .join("\n")
 }
 
 fn line(line: u8) -> String {
