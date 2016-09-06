@@ -18,8 +18,7 @@ fn line(line: u8) -> String {
         3 => "Take it down and pass it around, no more bottles of beer on the wall.".to_string(),
         5 => "Take one down and pass it around, 1 bottle of beer on the wall.".to_string(),
         _ if line % 2 == 0 => format!("{} bottles of beer on the wall, {} bottles of beer.", line / 2, line / 2),
-        _ if line % 2 == 1 => format!("Take one down and pass it around, {} bottles of beer on the wall.", line / 2 - 1),
-        _ => panic!("This will never happen. This also looks like not a great code as well.")
+        _ => format!("Take one down and pass it around, {} bottles of beer on the wall.", line / 2 - 1)
     }
 }
 
