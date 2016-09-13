@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(PartialEq, Debug)]
 pub struct DeoxyribonucleicAcid {
     pub strand: String,
 }
@@ -25,7 +25,7 @@ impl DeoxyribonucleicAcid {
     }
 }
 
-#[derive(Debug)]
+#[derive(PartialEq, Debug)]
 pub struct RibonucleicAcid {
     pub strand: String,
 }
@@ -35,11 +35,5 @@ impl RibonucleicAcid {
         RibonucleicAcid {
             strand: strand.to_string()
         }
-    }
-}
-
-impl PartialEq for RibonucleicAcid {
-    fn eq(&self, other: &RibonucleicAcid) -> bool {
-        self.strand == other.strand
     }
 }
