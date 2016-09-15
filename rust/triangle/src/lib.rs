@@ -1,12 +1,16 @@
-pub struct Triangle {
-    sides: [isize; 3],
+extern crate num;
+
+use num::Num;
+
+pub struct Triangle<T: Num> {
+    sides: [T; 3],
 }
 
-impl Triangle {
-    pub fn build(s: [isize; 3]) -> Result<Triangle, ()>  {
-        let t: Triangle = Triangle { sides: s };
+impl<T> Triangle<T> where T: Num + PartialOrd + Copy {
+    pub fn build(s: [T; 3]) -> Result<Triangle<T>, ()>  {
+        let t: Triangle<T> = Triangle { sides: s };
         
-        if s.iter().all(|&s| s <= 0) {
+        if s.iter().all(|&s| s <= T::zero()) {
             return Err(());
         }
 
