@@ -32,6 +32,6 @@ impl<T> Triangle<T> where T: Num + PartialOrd + Copy {
     }
 
     pub fn is_scalene(&self) -> bool {
-        self.sides[0] != self.sides[1] && self.sides[1] != self.sides[2] && self.sides[2] != self.sides[0]
+        !self.is_equilateral() && !self.is_isosceles()
     }
 }
