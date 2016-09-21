@@ -1,39 +1,12 @@
-///
-/// Convert a number between two bases.
-///
-/// A number is any slice of digits.
-/// A digit is any unsigned integer (e.g. u8, u16, u32, u64, or usize).
-/// Bases are specified as unsigned integers.
-///
-/// Return an `Err(.)` if the conversion is impossible.
-/// The tests do not test for specific values inside the `Err(.)`.
-///
-///
-/// You are allowed to change the function signature as long as all test still pass.
-///
-///
-/// Example:
-/// Input
-///   number: &[4, 2]
-///   from_base: 10
-///   to_base: 2
-/// Result
-///   Ok(vec![1, 0, 1, 0, 1, 0])
-///
-/// The example corresponds to converting the number 42 from decimal
-/// which is equivalent to 101010 in binary.
-///
-///
-/// Notes:
-///  * The empty slice ( "[]" ) is equal to the number 0.
-///  * Never output leading 0 digits. However, your function must be able to
-///     process input with leading 0 digits.
-///
-#[allow(unused_variables)]
-pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>, ()> {
-    let mut u64number: usize = 0;
+extern crate num;
 
-    if from_base < 2 || to_base < 2 {
+use num::{Num, ToPrimitive};
+use num::pow::pow;
+
+pub fn convert<T: Num + PartialOrd + Copy + ToPrimitive>(number: &[T], from_base: T, to_base: T) -> Result<Vec<T>, ()> {
+    let mut whole_value: T = T::zero();
+
+    if from_base <= T::one() || to_base <= T::one() {
         return Err(());
     }
 
@@ -42,21 +15,21 @@ pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>,
             return Err(());
         }
 
-        u64number += (from_base as usize).pow(i as u32) * (*digit as usize);
+        whole_value = whole_value + pow(from_base, i) * (*digit);
     }
 
     // that's rather dirty
-    if u64number == 0 { return Ok(vec![]); }
+    if whole_value == T::zero() { return Ok(vec![]); }
 
-    let mut digit = 0;
-    let mut result: Vec<u32> = vec![];
+    let mut digit = T::zero();
+    let mut result: Vec<T> = vec![];
 
     loop {
-        result.push((u64number % (to_base as usize).pow(digit + 1) / (to_base as usize).pow(digit)) as u32);
+        result.push(whole_value % pow(to_base, digit.to_usize().unwrap() + 1) / pow(to_base, digit.to_usize().unwrap()));
 
-        digit += 1;
+        digit = digit + T::one();
 
-        if u64number % (to_base as usize).pow(digit) == u64number {
+        if whole_value % pow(to_base, digit.to_usize().unwrap()) == whole_value {
             break;
         }
     }
