@@ -31,5 +31,37 @@
 ///
 #[allow(unused_variables)]
 pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>, ()> {
-    unimplemented!()
+    let mut u64number: usize = 0;
+
+    if from_base < 2 || to_base < 2 {
+        return Err(());
+    }
+
+    for (i, digit) in number.iter().rev().enumerate() {
+        if *digit >= from_base {
+            return Err(());
+        }
+
+        u64number += (from_base as usize).pow(i as u32) * (*digit as usize);
+    }
+
+    // that's rather dirty
+    if u64number == 0 { return Ok(vec![]); }
+
+    let mut digit = 0;
+    let mut result: Vec<u32> = vec![];
+
+    loop {
+        result.push((u64number % (to_base as usize).pow(digit + 1) / (to_base as usize).pow(digit)) as u32);
+
+        digit += 1;
+
+        if u64number % (to_base as usize).pow(digit) == u64number {
+            break;
+        }
+    }
+
+    result.reverse();
+
+    return Ok(result);
 }
