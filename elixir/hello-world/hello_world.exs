@@ -23,9 +23,9 @@ defmodule HelloWorld do
   if no name is given.
   """
   @spec hello(String.t) :: String.t
-  def hello(name) do
+  def hello(name \\ "World") do
 
-    "Your implementation goes here"
+    "Hello, #{name}!"
 
   end
 end
