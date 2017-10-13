@@ -1,3 +1,6 @@
 .idea/
 rust/*/target/*
 *.swp
+elm/*/node_modules
+elm/*/elm-stuff
+elm/*/tests/elm-stuff
