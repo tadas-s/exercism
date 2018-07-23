@@ -7,5 +7,5 @@ square <- function(n) {
 }
 
 total <- function() {
-    sum(unlist(Map(square, 1:64)))
+    sum(square(1:64))
 }
