@@ -1,3 +1,7 @@
 .idea/
 rust/*/target/*
 *.swp
+
+.lein-failures
+.lein-repl-history
+.nrepl-port
