@@ -1,11 +1,20 @@
 (ns armstrong-numbers)
 
-(defn digits [number] (map #(long (Character/digit % 10)) (str number)))
+(defn- pow [base exponent]
+  (reduce * 
+          (repeat exponent base)))
 
-;; Integers only base^exponent operation
-(defn pow [base exponent]
-  (reduce * (repeat exponent base)))
+(defn- digits [num]
+  (+ 1 (int (Math/floor (Math/log10 num)))))
+
+(defn- dividers [num]
+  (take-while #(> num (mod num %)) 
+              (iterate #(* 10 %) 1)))
 
 (defn armstrong? [num]
-  (let [all_digits (digits num) number_of_digits (count all_digits)]
-    (= num (reduce + (map #(pow % number_of_digits) all_digits)))))
+  (let [total_digits (digits num)]
+    (= num
+       (reduce +
+               (map #(pow % total_digits)
+                    (map #(quot (mod num (* 10 %)) %)
+                         (dividers num)))))))
