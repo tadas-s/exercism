@@ -6,7 +6,7 @@
     \C \G
     \T \A
     \A \U
-    :else (throw (AssertionError. "Wrong input."))))
+    (throw (AssertionError.))))
 
 (defn to-rna [dna]
   (->> dna
