@@ -1,5 +1,14 @@
 (ns rna-transcription)
 
-(defn to-rna [dna] ;; <- arglist goes here
-  ;; your code goes here
-)
+(defn- nucleotide-translate [nucleotide]
+  (case nucleotide
+    \G \C
+    \C \G
+    \T \A
+    \A \U
+    :else (throw (AssertionError. "Wrong input."))))
+
+(defn to-rna [dna]
+  (->> dna
+       (map nucleotide-translate)
+       (apply str)))
