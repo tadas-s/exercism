@@ -4,7 +4,7 @@ pub fn raindrops(n: u32) -> String {
     let plong = n % 7 == 0;
 
     if pling || plang || plong {
-        let mut rainspeak = String::from("");
+        let mut rainspeak = String::new();
         if pling { rainspeak.push_str("Pling") }
         if plang { rainspeak.push_str("Plang") }
         if plong { rainspeak.push_str("Plong") }
