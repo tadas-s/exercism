@@ -55,6 +55,6 @@ impl Iterator for Primes {
 }
 
 pub fn nth(n: u32) -> u32 {
-    let primes: Primes = Primes::new();
-    return primes.skip(n as usize).take(1).last().unwrap();
+    let mut primes: Primes = Primes::new();
+    return primes.nth(n as usize).unwrap();
 }
