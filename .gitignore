@@ -1,5 +1,9 @@
 .idea/
 rust/*/target/*
+c/*/test/*
+!c/*/test/test_*.c
+c/*/*.out
+*/*/.exercism/metadata.json
 *.swp
 
 .lein-failures
