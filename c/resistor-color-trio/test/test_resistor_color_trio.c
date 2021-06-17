@@ -19,7 +19,6 @@ static void test_orange_orange_black(void)
 
 static void test_blue_grey_brown(void)
 {
-   TEST_IGNORE();               // delete this line to run test
    resistor_value_t actual =
        color_code((resistor_band_t[]){ BLUE, GREY, BROWN });
    TEST_ASSERT_EQUAL_UINT16(680, actual.value);
@@ -28,7 +27,6 @@ static void test_blue_grey_brown(void)
 
 static void test_red_black_red(void)
 {
-   TEST_IGNORE();
    resistor_value_t actual = color_code((resistor_band_t[]){ RED, BLACK, RED });
    TEST_ASSERT_EQUAL_UINT16(2, actual.value);
    TEST_ASSERT_EQUAL(KILOOHMS, actual.unit);
@@ -36,7 +34,6 @@ static void test_red_black_red(void)
 
 static void test_green_brown_orange(void)
 {
-   TEST_IGNORE();
    resistor_value_t actual =
        color_code((resistor_band_t[]){ GREEN, BROWN, ORANGE });
    TEST_ASSERT_EQUAL_UINT16(51, actual.value);
@@ -45,11 +42,18 @@ static void test_green_brown_orange(void)
 
 static void test_yellow_violet_yellow(void)
 {
-   TEST_IGNORE();
    resistor_value_t actual =
        color_code((resistor_band_t[]){ YELLOW, VIOLET, YELLOW });
    TEST_ASSERT_EQUAL_UINT16(470, actual.value);
    TEST_ASSERT_EQUAL(KILOOHMS, actual.unit);
+}
+
+static void test_yellow_violet_green(void)
+{
+   resistor_value_t actual =
+       color_code((resistor_band_t[]){ YELLOW, VIOLET, RED });
+   TEST_ASSERT_EQUAL_UINT16(4700, actual.value);
+   TEST_ASSERT_EQUAL(OHMS, actual.unit);
 }
 
 int main(void)
@@ -61,6 +65,7 @@ int main(void)
    RUN_TEST(test_red_black_red);
    RUN_TEST(test_green_brown_orange);
    RUN_TEST(test_yellow_violet_yellow);
+   RUN_TEST(test_yellow_violet_green);
 
    return UnityEnd();
 }
