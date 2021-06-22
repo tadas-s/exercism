@@ -59,7 +59,6 @@ static void test_count_one_word(void)
 
 static void test_count_one_of_each_word(void)
 {
-   TEST_IGNORE();               // delete this line to run test
    int index = 0;
    int actual_word_count;
    char *input_text = "one of each";
@@ -87,7 +86,6 @@ static void test_count_one_of_each_word(void)
 
 static void test_multiple_occurrences_of_a_word(void)
 {
-   TEST_IGNORE();
    int index = 0;
    int actual_word_count;
    char *input_text = "one fish two fish red fish blue fish";
@@ -120,7 +118,6 @@ static void test_multiple_occurrences_of_a_word(void)
 
 static void test_handles_cramped_lists(void)
 {
-   TEST_IGNORE();
    int index = 0;
    int actual_word_count;
    char *input_text = "one,two,three";
@@ -147,7 +144,6 @@ static void test_handles_cramped_lists(void)
 
 static void test_handles_expanded_lists(void)
 {
-   TEST_IGNORE();
    int index = 0;
    int actual_word_count;
    char *input_text = "one,\ntwo,\nthree";
@@ -174,7 +170,6 @@ static void test_handles_expanded_lists(void)
 
 static void test_ignore_punctuation(void)
 {
-   TEST_IGNORE();
    int index = 0;
    int actual_word_count;
    char *input_text = "car: carpet as java: javascript!!&@$%^&";
@@ -207,7 +202,6 @@ static void test_ignore_punctuation(void)
 
 static void test_include_numbers(void)
 {
-   TEST_IGNORE();
    int index = 0;
    int actual_word_count;
    char *input_text = "testing, 1, 2 testing";
@@ -234,7 +228,6 @@ static void test_include_numbers(void)
 
 static void test_normalize_case(void)
 {
-   TEST_IGNORE();
    int index = 0;
    int actual_word_count;
    char *input_text = "go Go GO Stop stop";
@@ -258,7 +251,6 @@ static void test_normalize_case(void)
 
 static void test_with_apostrophes(void)
 {
-   TEST_IGNORE();
    int index = 0;
    int actual_word_count;
    char *input_text = "First: don't laugh. Then: don't cry.";
@@ -291,7 +283,6 @@ static void test_with_apostrophes(void)
 
 static void test_with_quotations(void)
 {
-   TEST_IGNORE();
    int index = 0;
    int actual_word_count;
    char *input_text = "Joe can't tell between 'large' and large.";
@@ -327,7 +318,6 @@ static void test_with_quotations(void)
 
 static void test_substrings_from_the_beginning(void)
 {
-   TEST_IGNORE();
    int index = 0;
    int actual_word_count;
    char *input_text = "Joe can't tell between app, apple and a.";
@@ -369,7 +359,6 @@ static void test_substrings_from_the_beginning(void)
 
 static void test_multiple_spaces_not_detected_as_a_word(void)
 {
-   TEST_IGNORE();
    int actual_word_count;
    int index = 0;
    char *input_text = " multiple   whitespaces";
@@ -394,7 +383,6 @@ static void test_multiple_spaces_not_detected_as_a_word(void)
 
 static void test_alternating_word_separators_not_detected_as_a_word(void)
 {
-   TEST_IGNORE();
    int actual_word_count;
    int index = 0;
    char *input_text = ",\n,one,\n ,two \n 'three'";
@@ -420,6 +408,139 @@ static void test_alternating_word_separators_not_detected_as_a_word(void)
                   expected_word_count, actual_solution, actual_word_count);
 }
 
+static void test_longest_usable_word(void)
+{
+   int actual_word_count;
+   int index = 0;
+   char *input_text = "xalongwordxalongwordxalongwordxalongwordxalongword notsolong";
+
+   const int expected_word_count = 2;
+
+   // build the expected solution
+   memset(expected_solution, 0, sizeof(expected_solution));     // clear to start with a known value
+   memset(actual_solution, 0, sizeof(actual_solution));
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "xalongwordxalongwordxalongwordxalongwordxalongword", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "notsolong", STRING_SIZE);
+
+   actual_word_count = count_words(input_text, actual_solution);
+
+   check_solution(expected_solution,
+                  expected_word_count, actual_solution, actual_word_count);
+}
+
+static void test_word_too_long(void)
+{
+   int actual_word_count;
+   char *input_text = "notsolong xalongwordxalongwordxalongwordxalongwordxalongwordX notsolong";
+
+   const int expected_word_count = EXCESSIVE_LENGTH_WORD;
+
+   memset(expected_solution, 0, sizeof(expected_solution));
+   memset(actual_solution, 0, sizeof(actual_solution));
+
+   actual_word_count = count_words(input_text, actual_solution);
+
+   check_solution(expected_solution,
+                  expected_word_count, actual_solution, actual_word_count);
+}
+
+static void test_too_many_words(void)
+{
+   int actual_word_count;
+   char *input_text = "a b c d e f g h i j k l m n o p q r s t u";
+
+   const int expected_word_count = EXCESSIVE_NUMBER_OF_WORDS;
+
+   memset(expected_solution, 0, sizeof(expected_solution));
+   memset(actual_solution, 0, sizeof(actual_solution));
+
+   actual_word_count = count_words(input_text, actual_solution);
+
+   check_solution(expected_solution,
+                  expected_word_count, actual_solution, actual_word_count);
+}
+
+static void test_max_number_of_words(void)
+{
+   int actual_word_count;
+   int index = 0;
+   char *input_text = "a b c d e f g h i j k l m n o p q r s t";
+
+   const int expected_word_count = 20;
+
+   memset(expected_solution, 0, sizeof(expected_solution));
+   memset(actual_solution, 0, sizeof(actual_solution));
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "a", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "b", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "c", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "d", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "e", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "f", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "g", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "h", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "i", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "j", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "k", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "l", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "m", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "n", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "o", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "p", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "q", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "r", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "s", STRING_SIZE);
+
+   expected_solution[index].count = 1;
+   strncpy(expected_solution[index++].text, "t", STRING_SIZE);
+
+   actual_word_count = count_words(input_text, actual_solution);
+
+   check_solution(expected_solution,
+                  expected_word_count, actual_solution, actual_word_count);
+}
+
 int main(void)
 {
    UnityBegin("test/test_word_count.c");
@@ -437,6 +558,10 @@ int main(void)
    RUN_TEST(test_substrings_from_the_beginning);
    RUN_TEST(test_multiple_spaces_not_detected_as_a_word);
    RUN_TEST(test_alternating_word_separators_not_detected_as_a_word);
+   RUN_TEST(test_longest_usable_word);
+   RUN_TEST(test_word_too_long);
+   RUN_TEST(test_too_many_words);
+   RUN_TEST(test_max_number_of_words);
 
    return UnityEnd();
 }
