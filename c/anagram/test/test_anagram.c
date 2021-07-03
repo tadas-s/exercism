@@ -300,9 +300,27 @@ static void test_unicode_anagrams(void)
    assert_correct_anagrams(&candidates, expected);
 }
 
+static void test_lithuanian_unicode_anagrams(void)
+{
+   // These words don't make sense, they're just greek letters cobbled together.
+   char inputs[][MAX_STR_LEN] = {
+      "pasas",
+      "saapaš",
+      "pašas",
+      "PAAŠS"
+   };
+
+   char subject[] = { "šapas" };
+
+   candidates = build_candidates(*inputs, sizeof(inputs) / MAX_STR_LEN);
+   enum anagram_status expected[] = { NOT_ANAGRAM, NOT_ANAGRAM, IS_ANAGRAM, IS_ANAGRAM };
+
+   find_anagrams(subject, &candidates);
+   assert_correct_anagrams(&candidates, expected);
+}
+
 static void test_misleading_unicode_anagrams(void)
 {
-   TEST_IGNORE();               //This is an extra credit test, are you up for the challenge
    // Despite what a human might think these words different letters, the input uses Greek A and B
    // while the list of potential anagrams uses Latin A and B.
    char inputs[][MAX_STR_LEN] = {
@@ -339,6 +357,7 @@ int main(void)
 
    // Bonus points
    RUN_TEST(test_unicode_anagrams);
+   RUN_TEST(test_lithuanian_unicode_anagrams);
    RUN_TEST(test_misleading_unicode_anagrams);
 
    return UnityEnd();
