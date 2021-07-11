@@ -17,6 +17,11 @@ static void test_conversion(int number, char *expected)
    free(result);
 }
 
+static void test_zero_yields_empty_string(void)
+{
+   test_conversion(0, NULL);
+}
+
 static void test_one_yields_I(void)
 {
    test_conversion(1, "I");
@@ -126,6 +131,7 @@ int main(void)
 {
    UnityBegin("test/test_roman_numerals.c");
 
+   RUN_TEST(test_zero_yields_empty_string);
    RUN_TEST(test_one_yields_I);
    RUN_TEST(test_two_yields_II);
    RUN_TEST(test_three_yields_III);

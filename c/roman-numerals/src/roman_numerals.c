@@ -4,10 +4,15 @@
 #include <math.h>
 #include <sys/types.h>
 
-char *to_roman_numeral(unsigned int number) {
-    const char numerals[] = "IVXLCDM  ";
+const char *units[][9] = {
+    { "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX" },
+    { "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC" },
+    { "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM" },
+    { "M", "MM", "MMM" }
+};
 
-    if (number > 4000) {
+char *to_roman_numeral(unsigned int number) {
+    if (number == 0 || number > 4000) {
         return NULL;
     }
 
@@ -15,55 +20,14 @@ char *to_roman_numeral(unsigned int number) {
     // and 1 character for termination.
     const size_t size = (floor(log10(number)) + 1) * 4 + 1;
     char *buffer = malloc(size);
+    char *offset = buffer;
     memset(buffer, '\0', size);
 
-    size_t offset = 0;
-
     for(ssize_t i = 3; i >= 0; i--) {
-        char one = numerals[i * 2];
-        char five = numerals[i * 2 + 1];
-        char ten = numerals[i * 2 + 2];
-
-        switch((number % (unsigned int)pow(10, i + 1)) / (unsigned int)pow(10, i)) {
-            case 1:
-                buffer[offset] = one;
-                offset += 1;
-            break;
-            case 2:
-                buffer[offset++] = one;
-                buffer[offset++] = one;
-            break;
-            case 3:
-                buffer[offset++] = one;
-                buffer[offset++] = one;
-                buffer[offset++] = one;
-            break;
-            case 4:
-                buffer[offset++] = one;
-                buffer[offset++] = five;
-            break;
-            case 5:
-                buffer[offset++] = five;
-            break;
-            case 6:
-                buffer[offset++] = five;
-                buffer[offset++] = one;
-            break;
-            case 7:
-                buffer[offset++] = five;
-                buffer[offset++] = one;
-                buffer[offset++] = one;
-            break;
-            case 8:
-                buffer[offset++] = five;
-                buffer[offset++] = one;
-                buffer[offset++] = one;
-                buffer[offset++] = one;
-            break;
-            case 9:
-                buffer[offset++] = one;
-                buffer[offset++] = ten;
-            break;
+        const unsigned int digit = (number % (unsigned int)pow(10, i + 1)) / (unsigned int)pow(10, i);
+        if (digit > 0) {
+            strcpy(offset, units[i][digit - 1]);
+            offset += strlen(units[i][digit - 1]);
         }
     }
 
