@@ -3,6 +3,6 @@
 
 #include <stdint.h>
 
-int say(int64_t input, char **ans);
+int say(int64_t n, char **dest);
 
 #endif
