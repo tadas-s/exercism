@@ -20,7 +20,6 @@ static void test_word_beginning_with_a(void)
 
 static void test_word_beginning_with_e(void)
 {
-   TEST_IGNORE();               // delete this line to run test
    const char *phrase = "ear";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("earay", res);
@@ -29,7 +28,6 @@ static void test_word_beginning_with_e(void)
 
 static void test_word_beginning_with_i(void)
 {
-   TEST_IGNORE();
    const char *phrase = "igloo";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("iglooay", res);
@@ -38,7 +36,6 @@ static void test_word_beginning_with_i(void)
 
 static void test_word_beginning_with_o(void)
 {
-   TEST_IGNORE();
    const char *phrase = "object";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("objectay", res);
@@ -47,7 +44,6 @@ static void test_word_beginning_with_o(void)
 
 static void test_word_beginning_with_u(void)
 {
-   TEST_IGNORE();
    const char *phrase = "under";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("underay", res);
@@ -56,7 +52,6 @@ static void test_word_beginning_with_u(void)
 
 static void test_word_beginning_with_a_vowel_and_followed_by_a_qu(void)
 {
-   TEST_IGNORE();
    const char *phrase = "equal";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("equalay", res);
@@ -65,7 +60,6 @@ static void test_word_beginning_with_a_vowel_and_followed_by_a_qu(void)
 
 static void test_word_beginning_with_p(void)
 {
-   TEST_IGNORE();
    const char *phrase = "pig";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("igpay", res);
@@ -74,7 +68,6 @@ static void test_word_beginning_with_p(void)
 
 static void test_word_beginning_with_k(void)
 {
-   TEST_IGNORE();
    const char *phrase = "koala";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("oalakay", res);
@@ -83,7 +76,6 @@ static void test_word_beginning_with_k(void)
 
 static void test_word_beginning_with_x(void)
 {
-   TEST_IGNORE();
    const char *phrase = "xenon";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("enonxay", res);
@@ -92,7 +84,6 @@ static void test_word_beginning_with_x(void)
 
 static void test_word_beginning_with_q_without_a_following_u(void)
 {
-   TEST_IGNORE();
    const char *phrase = "qat";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("atqay", res);
@@ -101,7 +92,6 @@ static void test_word_beginning_with_q_without_a_following_u(void)
 
 static void test_word_beginning_with_ch(void)
 {
-   TEST_IGNORE();
    const char *phrase = "chair";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("airchay", res);
@@ -110,7 +100,6 @@ static void test_word_beginning_with_ch(void)
 
 static void test_word_beginning_with_qu(void)
 {
-   TEST_IGNORE();
    const char *phrase = "queen";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("eenquay", res);
@@ -119,7 +108,6 @@ static void test_word_beginning_with_qu(void)
 
 static void test_word_beginning_with_qu_and_a_preceding_consonant(void)
 {
-   TEST_IGNORE();
    const char *phrase = "square";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("aresquay", res);
@@ -128,7 +116,6 @@ static void test_word_beginning_with_qu_and_a_preceding_consonant(void)
 
 static void test_word_beginning_with_th(void)
 {
-   TEST_IGNORE();
    const char *phrase = "therapy";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("erapythay", res);
@@ -137,7 +124,6 @@ static void test_word_beginning_with_th(void)
 
 static void test_word_beginning_with_thr(void)
 {
-   TEST_IGNORE();
    const char *phrase = "thrush";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("ushthray", res);
@@ -146,7 +132,6 @@ static void test_word_beginning_with_thr(void)
 
 static void test_word_beginning_with_sch(void)
 {
-   TEST_IGNORE();
    const char *phrase = "school";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("oolschay", res);
@@ -155,7 +140,6 @@ static void test_word_beginning_with_sch(void)
 
 static void test_word_beginning_with_yt(void)
 {
-   TEST_IGNORE();
    const char *phrase = "yttria";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("yttriaay", res);
@@ -164,7 +148,6 @@ static void test_word_beginning_with_yt(void)
 
 static void test_word_beginning_with_xr(void)
 {
-   TEST_IGNORE();
    const char *phrase = "xray";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("xrayay", res);
@@ -173,7 +156,6 @@ static void test_word_beginning_with_xr(void)
 
 static void test_y_is_treated_like_a_consonant_at_the_beginning_of_a_word(void)
 {
-   TEST_IGNORE();
    const char *phrase = "yellow";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("ellowyay", res);
@@ -183,7 +165,6 @@ static void test_y_is_treated_like_a_consonant_at_the_beginning_of_a_word(void)
 static void
 test_y_is_treated_like_a_vowel_at_the_end_of_a_consonant_cluster(void)
 {
-   TEST_IGNORE();
    const char *phrase = "rhythm";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("ythmrhay", res);
@@ -192,7 +173,6 @@ test_y_is_treated_like_a_vowel_at_the_end_of_a_consonant_cluster(void)
 
 static void test_y_as_second_letter_in_two_letter_word(void)
 {
-   TEST_IGNORE();
    const char *phrase = "my";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("ymay", res);
@@ -201,7 +181,6 @@ static void test_y_as_second_letter_in_two_letter_word(void)
 
 static void test_a_whole_phrase(void)
 {
-   TEST_IGNORE();
    const char *phrase = "quick fast run";
    char *res = translate(phrase);
    TEST_ASSERT_EQUAL_STRING("ickquay astfay unray", res);
