@@ -6,9 +6,7 @@
 
 char *ciphertext(const char *input) {
     const size_t length = strlen(input);
-    char *buff = malloc(length + 1);
-
-    memset(buff, '\0', length + 1);
+    char *buff = calloc(length + 1, sizeof(char));
 
     size_t normalized_length = 0;
 

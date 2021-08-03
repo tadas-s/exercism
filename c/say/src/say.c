@@ -29,8 +29,7 @@ static char *names4[] = {
 int say(int64_t n, char **dest) {
     if (n < 0 || n > 999999999999) { return -1; }
 
-    *dest = malloc(1000);
-    memset(*dest, '\0', 1000);
+    *dest = calloc(1000, sizeof(char));
 
     if (n == 0) {
         strcat_with_space(*dest, "zero");

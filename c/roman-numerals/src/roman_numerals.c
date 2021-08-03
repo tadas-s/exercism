@@ -19,9 +19,8 @@ char *to_roman_numeral(unsigned int number) {
     // Guesstimate the max resulting string size: up to 4 characters per digit
     // and 1 character for termination.
     const size_t size = (floor(log10(number)) + 1) * 4 + 1;
-    char *buffer = malloc(size);
+    char *buffer = calloc(size, sizeof(char));
     char *offset = buffer;
-    memset(buffer, '\0', size);
 
     for(ssize_t i = 3; i >= 0; i--) {
         const unsigned int digit = (number % (unsigned int)pow(10, i + 1)) / (unsigned int)pow(10, i);

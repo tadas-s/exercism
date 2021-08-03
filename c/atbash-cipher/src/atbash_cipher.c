@@ -10,8 +10,7 @@ char *atbash_encode(const char *input) {
     // Max result length: up to original + spaces every 5 chars + zero termination
     const size_t max_result_length = length + length / 5 + 1;
 
-    char *result = malloc(max_result_length);
-    memset(result, '\0', max_result_length);
+    char *result = calloc(max_result_length, sizeof(char));
 
     size_t result_offset = 0;
 
@@ -42,8 +41,7 @@ void add_space(char *input, size_t *result_offset) {
 char *atbash_decode(const char *input) {
     const size_t length = strlen(input) + 1;
 
-    char *result = malloc(length);
-    memset(result, '\0', length);
+    char *result = calloc(length, sizeof(char));
 
     size_t result_offset = 0;
 

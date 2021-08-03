@@ -18,8 +18,7 @@ uint8_t **create_triangle(size_t rows) {
     uint8_t **triangle = malloc(allocate * sizeof(uint8_t *));
 
     for (size_t i = 0; i < allocate; i++) {
-        triangle[i] = malloc(allocate * sizeof(uint8_t));
-        memset(triangle[i], 0, allocate);
+        triangle[i] = calloc(allocate, sizeof(uint8_t));
     }
 
     if (rows < 1) {
