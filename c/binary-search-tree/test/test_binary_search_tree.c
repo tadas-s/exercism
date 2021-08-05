@@ -28,7 +28,6 @@ static void test_data_data_is_retained(void)
 
 static void test_data_smaller_number_at_left_node(void)
 {
-   TEST_IGNORE();               // delete this line to run test
    int tree_data[] = { 4, 2 };
    node_t *tree = build_tree(tree_data, ARRAY_SIZE(tree_data));
 
@@ -46,7 +45,6 @@ static void test_data_smaller_number_at_left_node(void)
 
 static void test_data_same_number_at_left_node(void)
 {
-   TEST_IGNORE();
    int tree_data[] = { 4, 4 };
    node_t *tree = build_tree(tree_data, ARRAY_SIZE(tree_data));
 
@@ -64,7 +62,6 @@ static void test_data_same_number_at_left_node(void)
 
 static void test_data_greater_number_at_right_node(void)
 {
-   TEST_IGNORE();
    int tree_data[] = { 4, 5 };
    node_t *tree = build_tree(tree_data, ARRAY_SIZE(tree_data));
 
@@ -82,7 +79,6 @@ static void test_data_greater_number_at_right_node(void)
 
 static void test_data_can_create_complex_tree(void)
 {
-   TEST_IGNORE();
    int tree_data[] = { 4, 2, 6, 1, 3, 5, 7 };
    node_t *tree = build_tree(tree_data, ARRAY_SIZE(tree_data));
 
@@ -120,7 +116,6 @@ static void test_data_can_create_complex_tree(void)
 
 static void test_sorted_data_can_sort_single_number(void)
 {
-   TEST_IGNORE();
    int tree_data[] = { 2 };
    node_t *tree = build_tree(tree_data, ARRAY_SIZE(tree_data));
 
@@ -135,7 +130,6 @@ static void test_sorted_data_can_sort_single_number(void)
 static void
 test_sorted_data_can_sort_if_second_number_is_smaller_than_first(void)
 {
-   TEST_IGNORE();
    int tree_data[] = { 2, 1 };
    node_t *tree = build_tree(tree_data, ARRAY_SIZE(tree_data));
 
@@ -149,7 +143,6 @@ test_sorted_data_can_sort_if_second_number_is_smaller_than_first(void)
 
 static void test_sorted_data_can_sort_if_second_number_is_same_as_first(void)
 {
-   TEST_IGNORE();
    int tree_data[] = { 2, 2 };
    node_t *tree = build_tree(tree_data, ARRAY_SIZE(tree_data));
 
@@ -164,7 +157,6 @@ static void test_sorted_data_can_sort_if_second_number_is_same_as_first(void)
 static void
 test_sorted_data_can_sort_if_second_number_is_greater_than_first(void)
 {
-   TEST_IGNORE();
    int tree_data[] = { 2, 3 };
    node_t *tree = build_tree(tree_data, ARRAY_SIZE(tree_data));
 
@@ -178,7 +170,6 @@ test_sorted_data_can_sort_if_second_number_is_greater_than_first(void)
 
 static void test_sorted_data_can_sort_complex_tree(void)
 {
-   TEST_IGNORE();
    int tree_data[] = { 2, 1, 3, 6, 7, 5 };
    node_t *tree = build_tree(tree_data, ARRAY_SIZE(tree_data));
 
