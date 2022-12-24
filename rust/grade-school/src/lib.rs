@@ -1,25 +1,26 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 pub struct School {
-    grades_names: HashMap<u32, Vec<String>>,
+    grades_names: BTreeMap<u32, Vec<String>>,
 }
 
 impl School {
     pub fn new() -> School {
-        School { grades_names: HashMap::new() }
+        School { grades_names: BTreeMap::new() }
     }
 
     pub fn add(&mut self, grade: u32, student: &str) {
         self.grades_names
             .entry(grade)
-            .and_modify(|list| list.push(student.to_string()))
+            .and_modify(|list| {
+                list.push(student.to_string());
+                list.sort();
+            })
             .or_insert(vec![student.to_string()]);
     }
 
     pub fn grades(&self) -> Vec<u32> {
-        let mut grades: Vec<u32> = self.grades_names.clone().into_keys().collect();
-        grades.sort();
-        grades
+        self.grades_names.keys().cloned().collect()
     }
 
     // If `grade` returned a reference, `School` would be forced to keep a `Vec<String>`
@@ -27,12 +28,9 @@ impl School {
     // the internal structure can be completely arbitrary. The tradeoff is that some data
     // must be copied each time `grade` is called.
     pub fn grade(&self, grade: u32) -> Vec<String> {
-        let mut names: Vec<String> = match self.grades_names.get(&grade) {
+        match self.grades_names.get(&grade) {
             Some(list) => list.clone(),
             None => vec![],
-        };
-
-        names.sort();
-        names
+        }
     }
 }
