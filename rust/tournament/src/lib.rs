@@ -8,16 +8,28 @@ enum GameOutcome {
 }
 
 #[derive(Clone, Copy)]
-struct TeamTally {
+struct Team<'a> {
+    name: &'a str,
     played: u8,
     won: u8,
     drew: u8,
-    lost: u8,
-    points: u8
+    lost: u8
+}
+
+impl PartialEq for Team<'_> {
+    fn eq(&self, other: &Self) -> bool {
+        self.name == other.name
+    }
+}
+
+impl Team<'_> {
+    pub fn points(&self) -> u8 {
+        self.won * 3 + self.drew
+    }
 }
 
 pub fn tally(match_results: &str) -> String {
-    let mut totals: BTreeMap<String, TeamTally> = BTreeMap::new();
+    let mut totals: BTreeMap<&str, Team> = BTreeMap::new();
 
     match_results.split("\n").for_each(|line| {
         if let Some((team_a, outcome_a, team_b, outcome_b)) = parse_line(line) {
@@ -28,14 +40,14 @@ pub fn tally(match_results: &str) -> String {
 
     let mut table: Vec<String> = vec!["Team                           | MP |  W |  D |  L |  P".to_string()];
 
-    let mut totals_vec: Vec<(String, TeamTally)> = totals.into_iter().collect::<Vec<(String, TeamTally)>>();
-    totals_vec.sort_by(|(_, tat), (_, tbt)| tbt.points.cmp(&tat.points));
+    let mut totals_vec: Vec<Team> = totals.values().cloned().collect();
+    totals_vec.sort_by(|ta, tb| tb.points().cmp(&ta.points()));
 
     let mut formatted_totals = totals_vec.iter()
-        .map(|(team, tally)| {
+        .map(|team| {
             format!(
                 "{:30} | {:2} | {:2} | {:2} | {:2} | {:2}",
-                team, tally.played, tally.won, tally.drew, tally.lost, tally.points
+                team.name, team.played, team.won, team.drew, team.lost, team.points()
             ).to_string()
         })
         .collect();
@@ -54,22 +66,16 @@ fn parse_line(l: &str) -> Option<(&str, GameOutcome, &str, GameOutcome)> {
     }
 }
 
-fn log_team_result(totals: &mut BTreeMap<String, TeamTally>, team: &str, game_outcome: GameOutcome) {
+fn log_team_result<'a>(totals: &mut BTreeMap<&'a str, Team<'a>>, team: &'a str, game_outcome: GameOutcome) {
+    let entry = totals.entry(team).or_insert(
+        Team { name: team, played: 0, won: 0, drew: 0, lost: 0 }
+    );
+
+    entry.played += 1;
+
     match game_outcome {
-        GameOutcome::Win => {
-            totals.entry(team.to_string())
-                  .and_modify(|t| { t.played += 1; t.won += 1; t.points += 3 })
-                  .or_insert(TeamTally { played: 1, won: 1, drew: 0, lost: 0, points: 3 });
-        },
-        GameOutcome::Loss => {
-            totals.entry(team.to_string())
-                  .and_modify(|t| { t.played += 1; t.lost += 1 })
-                  .or_insert(TeamTally { played: 1, won: 0, drew: 0, lost: 1, points: 0 });
-        },
-        GameOutcome::Draw => {
-            totals.entry(team.to_string())
-                  .and_modify(|t| { t.played += 1; t.drew += 1; t.points += 1 })
-                  .or_insert(TeamTally { played: 1, won: 0, drew: 1, lost: 0, points: 1 });
-        }
+        GameOutcome::Win => entry.won += 1,
+        GameOutcome::Loss => entry.lost += 1,
+        GameOutcome::Draw => entry.drew += 1
     };
 }
