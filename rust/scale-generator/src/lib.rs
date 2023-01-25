@@ -213,7 +213,7 @@ impl Scale<'_> {
         Scale::new(tonic, "mmmmmmmmmmmm")
     }
 
-    pub fn enumerate<'a>(&self) -> Vec<String> {
+    pub fn enumerate(&self) -> Vec<String> {
         self.iterator.map(|note| note.to_string()).collect()
     }
 }
