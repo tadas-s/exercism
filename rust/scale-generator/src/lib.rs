@@ -142,15 +142,15 @@ static FLATS: &'static [Note] = &[
     Ab,
 ];
 
-struct NoteBag<'a> {
+struct ScaleIterator<'a> {
     index: usize,
     scale: &'static [Note],
     intervals: &'a str,
     interval_index: usize,
 }
 
-impl NoteBag<'_> {
-    pub fn new<'a>(tonic: &str, intervals: &'a str) -> Result<NoteBag<'a>, Error> {
+impl ScaleIterator<'_> {
+    pub fn new<'a>(tonic: &str, intervals: &'a str) -> Result<ScaleIterator<'a>, Error> {
         if let Ok(tonic) = Tonic::from_str(tonic) {
             let scale = match (tonic.note, tonic.key) {
                 (C, Major) | (G, Major) | (D, Major) | (A, _) | (E, Major) | (B, Major) |
@@ -160,7 +160,7 @@ impl NoteBag<'_> {
             };
 
             if let Some(index) = scale.iter().position(|n| tonic.note == *n) {
-                Ok(NoteBag { index, scale, intervals, interval_index: 0 })
+                Ok(ScaleIterator { index, scale, intervals, interval_index: 0 })
             } else {
                 Err(Error::BadNote)
             }
@@ -170,7 +170,7 @@ impl NoteBag<'_> {
     }
 }
 
-impl<'a> Iterator for NoteBag<'a> {
+impl<'a> Iterator for ScaleIterator<'a> {
     type Item = &'a Note;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -183,9 +183,12 @@ impl<'a> Iterator for NoteBag<'a> {
                 'A' => self.index += 3,
                 _ => panic!("Bad interval '{}'", interval)
             }
-            self.index = self.index % self.scale.len();
-            self.interval_index += 1;
+        } else if self.interval_index > self.intervals.len() {
+            return None;
         }
+
+        self.index = self.index % self.scale.len();
+        self.interval_index += 1;
 
         Some(note)
     }
@@ -216,10 +219,8 @@ impl Scale<'_> {
     }
 
     pub fn enumerate<'a>(&self) -> Vec<String> {
-        let note_bag = NoteBag::new(self.tonic, self.intervals).unwrap();
+        let scale_iterator = ScaleIterator::new(self.tonic, self.intervals).unwrap();
 
-        note_bag.take(self.intervals.len() + 1)
-                .map(|note| note.to_string())
-                .collect()
+        scale_iterator.map(|note| note.to_string()).collect()
     }
 }
