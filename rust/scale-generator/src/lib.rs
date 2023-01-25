@@ -142,6 +142,7 @@ static FLATS: &'static [Note] = &[
     Ab,
 ];
 
+#[derive(Clone, Copy)]
 struct ScaleIterator<'a> {
     index: usize,
     scale: &'static [Note],
@@ -195,32 +196,24 @@ impl<'a> Iterator for ScaleIterator<'a> {
 }
 
 pub struct Scale<'a> {
-    tonic: &'a str,
-    intervals: &'a str
+    iterator: ScaleIterator<'a>,
 }
 
 impl Scale<'_> {
     pub fn new<'a>(tonic: &'a str, intervals: &'a str) -> Result<Scale<'a>, Error> {
-        Ok(
-            Scale {
-                tonic: tonic,
-                intervals: intervals
-            }
-        )
+        match ScaleIterator::new(tonic, intervals) {
+            Ok(iterator) => Ok(
+                Scale { iterator }
+            ),
+            Err(error) => Err(error)
+        }
     }
 
     pub fn chromatic<'a>(tonic: &'a str) -> Result<Scale<'a>, Error> {
-        Ok(
-            Scale {
-                tonic: tonic,
-                intervals: "mmmmmmmmmmmm"
-            }
-        )
+        Scale::new(tonic, "mmmmmmmmmmmm")
     }
 
     pub fn enumerate<'a>(&self) -> Vec<String> {
-        let scale_iterator = ScaleIterator::new(self.tonic, self.intervals).unwrap();
-
-        scale_iterator.map(|note| note.to_string()).collect()
+        self.iterator.map(|note| note.to_string()).collect()
     }
 }
