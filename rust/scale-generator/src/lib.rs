@@ -1,33 +1,225 @@
-// You should change this.
-//
-// Depending on your implementation, there are a variety of potential errors
-// which might occur. They aren't checked by the test suite in order to
-// allow the greatest freedom of implementation, but real libraries should
-// provide useful, descriptive errors so that downstream code can react
-// appropriately.
-//
-// One common idiom is to define an Error enum which wraps all potential
-// errors. Another common idiom is to use a helper type such as failure::Error
-// which does more or less the same thing but automatically.
+use core::fmt;
+use std::{fmt::Display, str::FromStr};
+
+use Note::*;
+use Key::*;
+
 #[derive(Debug)]
-pub struct Error;
+pub enum Error {
+    BadNote,
+    BadInterval
+}
 
-pub struct Scale;
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum Note {
+    C,
+    Csharp,
+    Db,
+    D,
+    Dsharp,
+    Eb,
+    E,
+    F,
+    Fsharp,
+    Gb,
+    G,
+    Gsharp,
+    Ab,
+    A,
+    Asharp,
+    Bb,
+    B
+}
 
-impl Scale {
-    pub fn new(tonic: &str, intervals: &str) -> Result<Scale, Error> {
-        unimplemented!(
-            "Construct a new scale with tonic {} and intervals {}",
-            tonic,
-            intervals
+impl Display for Note {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            C => write!(f, "C"),
+            Csharp => write!(f, "C#"),
+            Db => write!(f, "Db"),
+            D => write!(f, "D"),
+            Dsharp => write!(f, "D#"),
+            Eb => write!(f, "Eb"),
+            E => write!(f, "E"),
+            F => write!(f, "F"),
+            Fsharp => write!(f, "F#"),
+            Gb => write!(f, "Gb"),
+            G => write!(f, "G"),
+            Gsharp => write!(f, "G#"),
+            Ab => write!(f, "Ab"),
+            A => write!(f, "A"),
+            Asharp => write!(f, "A#"),
+            Bb => write!(f, "Bb"),
+            B => write!(f, "B"),
+        }
+    }
+}
+
+impl FromStr for Note {
+    type Err = Error;
+
+    fn from_str(note_str: &str) -> Result<Note, Error> {
+        match note_str {
+            "c"  | "C"  => Ok(C),
+            "c#" | "C#" => Ok(Csharp),
+            "db" | "Db" => Ok(Db),
+            "d"  | "D"  => Ok(D),
+            "d#" | "D#" => Ok(Dsharp),
+            "eb" | "Eb" => Ok(Eb),
+            "e"  | "E"  => Ok(E),
+            "f"  | "F"  => Ok(F),
+            "f#" | "F#" => Ok(Fsharp),
+            "gb" | "Gb" => Ok(Gb),
+            "g"  | "G"  => Ok(G),
+            "g#" | "G#" => Ok(Gsharp),
+            "ab" | "Ab" => Ok(Ab),
+            "a"  | "A"  => Ok(A),
+            "a#" | "A#" => Ok(Asharp),
+            "bb" | "Bb" => Ok(Bb),
+            "b"  | "B"  => Ok(B),
+            _ => Err(Error::BadNote)
+        }
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum Key {
+    Major, Minor
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+struct Tonic {
+    note: Note,
+    key: Key
+}
+
+impl FromStr for Tonic {
+    type Err = Error;
+
+    fn from_str(tonic_str: &str) -> Result<Tonic, Error> {
+        let note = Note::from_str(tonic_str);
+
+        let key = match tonic_str.chars().nth(0) {
+            Some('a'..='g') => Ok(Minor),
+            Some('A'..='G') => Ok(Major),
+            _ => Err(Error::BadNote)
+        };
+
+        match (note, key) {
+            (Ok(note), Ok(key)) => Ok(Tonic { note, key }),
+            _ => Err(Error::BadNote)
+        }
+    }
+}
+
+static SHARPS: &'static [Note] = &[
+    A,
+    Asharp,
+    B,
+    C,
+    Csharp,
+    D,
+    Dsharp,
+    E,
+    F,
+    Fsharp,
+    G,
+    Gsharp,
+];
+
+static FLATS: &'static [Note] = &[
+    A,
+    Bb,
+    B,
+    C,
+    Db,
+    D,
+    Eb,
+    E,
+    F,
+    Gb,
+    G,
+    Ab,
+];
+
+struct NoteBag<'a> {
+    index: usize,
+    scale: &'static [Note],
+    intervals: &'a str,
+    interval_index: usize,
+}
+
+impl NoteBag<'_> {
+    pub fn new<'a>(tonic: &str, intervals: &'a str) -> Result<NoteBag<'a>, Error> {
+        if let Ok(tonic) = Tonic::from_str(tonic) {
+            let scale = match (tonic.note, tonic.key) {
+                (C, Major) | (G, Major) | (D, Major) | (A, _) | (E, Major) | (B, Major) |
+                (Fsharp, Major) | (E, Minor) | (B, Minor) | (Fsharp, Minor) |
+                (Csharp, Minor) | (Gsharp, Minor) | (Dsharp, Minor) => SHARPS,
+                _ => FLATS
+            };
+
+            if let Some(index) = scale.iter().position(|n| tonic.note == *n) {
+                Ok(NoteBag { index, scale, intervals, interval_index: 0 })
+            } else {
+                Err(Error::BadNote)
+            }
+        } else {
+            Err(Error::BadNote)
+        }
+    }
+}
+
+impl<'a> Iterator for NoteBag<'a> {
+    type Item = &'a Note;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let note = &self.scale[self.index];
+
+        if let Some(interval) = self.intervals.chars().nth(self.interval_index) {
+            match interval {
+                'm' => self.index += 1,
+                'M' => self.index += 2,
+                'A' => self.index += 3,
+                _ => panic!("Bad interval '{}'", interval)
+            }
+            self.index = self.index % self.scale.len();
+            self.interval_index += 1;
+        }
+
+        Some(note)
+    }
+}
+
+pub struct Scale<'a> {
+    tonic: &'a str,
+    intervals: &'a str
+}
+
+impl Scale<'_> {
+    pub fn new<'a>(tonic: &'a str, intervals: &'a str) -> Result<Scale<'a>, Error> {
+        Ok(
+            Scale {
+                tonic: tonic,
+                intervals: intervals
+            }
         )
     }
 
-    pub fn chromatic(tonic: &str) -> Result<Scale, Error> {
-        unimplemented!("Construct a new chromatic scale with tonic {}", tonic)
+    pub fn chromatic<'a>(tonic: &'a str) -> Result<Scale<'a>, Error> {
+        Ok(
+            Scale {
+                tonic: tonic,
+                intervals: "mmmmmmmmmmmm"
+            }
+        )
     }
 
-    pub fn enumerate(&self) -> Vec<String> {
-        unimplemented!()
+    pub fn enumerate<'a>(&self) -> Vec<String> {
+        let note_bag = NoteBag::new(self.tonic, self.intervals).unwrap();
+
+        note_bag.take(self.intervals.len() + 1)
+                .map(|note| note.to_string())
+                .collect()
     }
 }
