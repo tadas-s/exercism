@@ -1,38 +1,34 @@
+#[rustfmt::skip]
 static DIRECTIONS: &'static [(i32, i32)] = &[
-    (-1, -1),
-    (0, -1),
-    (1, -1),
-    (-1, 0),
-    (1, 0),
-    (-1, 1),
-    (0, 1),
-    (1, 1),
+    (-1, -1), (0, -1),  (1, -1),
+    (-1,  0),           (1,  0),
+    (-1,  1), (0,  1),  (1,  1),
 ];
 
 pub fn annotate(minefield: &[&str]) -> Vec<String> {
     let mut marked: Vec<String> = Vec::with_capacity(minefield.len());
 
     for y in 0..minefield.len() {
-        let mut this_line = "".to_string();
+        let this_line = minefield[y]
+            .char_indices()
+            .map(|(x, square)| {
+                if square == '*' {
+                    return '*';
+                }
 
-        for (x, square) in minefield[y].char_indices() {
-            if square == '*' {
-                this_line.push('*');
-                continue;
-            }
+                let mines = DIRECTIONS
+                    .iter()
+                    .filter_map(|d| square_at(minefield, x, d.0, y, d.1))
+                    .filter(|s| *s == '*')
+                    .count();
 
-            let mines = DIRECTIONS
-                .iter()
-                .filter_map(|d| square_at(minefield, x, d.0, y, d.1))
-                .filter(|s| *s == '*')
-                .count();
-
-            if mines > 0 {
-                this_line.push(mines.to_string().chars().nth(0).unwrap())
-            } else {
-                this_line.push(' ');
-            }
-        }
+                if mines > 0 {
+                    mines.to_string().chars().nth(0).unwrap()
+                } else {
+                    ' '
+                }
+            })
+            .collect();
 
         marked.push(this_line);
     }
