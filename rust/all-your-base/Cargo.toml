@@ -2,3 +2,6 @@
 edition = "2021"
 name = "allyourbase"
 version = "1.0.0"
+
+[dependencies]
+num = "0.4"

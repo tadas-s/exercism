@@ -1,33 +1,53 @@
+use num::{checked_pow, pow, CheckedMul, Num, ToPrimitive};
+use std::fmt::Debug;
+
 #[derive(Debug, PartialEq, Eq)]
-pub enum Error {
+pub enum Error<T> {
     InvalidInputBase,
     InvalidOutputBase,
-    InvalidDigit(u32),
+    InvalidDigit(T),
 }
 
-pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>, Error> {
-    let mut u64number: usize = 0;
+pub fn convert<T: PartialOrd + Copy + Num + CheckedMul + ToPrimitive>(
+    number: &[T],
+    from_base: T,
+    to_base: T,
+) -> Result<Vec<T>, Error<T>> {
+    let mut n = T::zero();
 
-    if from_base < 2 { return Err(Error::InvalidInputBase); }
-    if to_base < 2 { return Err(Error::InvalidOutputBase); }
+    if from_base <= T::one() {
+        return Err(Error::InvalidInputBase);
+    }
+    if to_base <= T::one() {
+        return Err(Error::InvalidOutputBase);
+    }
 
-    for (i, &digit) in number.iter().rev().enumerate() {
+    for (exponent, &digit) in number.iter().rev().enumerate() {
         if digit >= from_base {
             return Err(Error::InvalidDigit(digit));
         }
 
-        u64number += (from_base as usize).pow(i as u32) * (digit as usize);
+        if digit > T::zero() { // to mult overflow if input has leading zero and is close to format maximum
+            n = n + pow(from_base, exponent) * digit;
+        }
     }
 
-    let mut digit = 0;
-    let mut result: Vec<u32> = vec![];
+    if n == T::zero() {
+        return Ok(vec![T::zero()]);
+    }
 
-    loop {
-        result.push((u64number % (to_base as usize).pow(digit + 1) / (to_base as usize).pow(digit)) as u32);
+    let mut result: Vec<T> = vec![];
 
-        digit += 1;
+    for exponent in 0.. {
+        if n % pow(to_base, exponent) == n {
+            break;
+        }
 
-        if u64number % (to_base as usize).pow(digit) == u64number {
+        if let Some(next_divisor) = checked_pow(to_base, exponent + 1) {
+            result.push(n % next_divisor / pow(to_base, exponent));
+        } else {
+            // This is the last most significant digit
+            result.push(n / pow(to_base, exponent));
             break;
         }
     }

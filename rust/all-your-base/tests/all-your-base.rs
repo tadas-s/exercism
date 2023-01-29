@@ -97,6 +97,18 @@ fn fifteen_bit_integer() {
 }
 
 #[test]
+fn fifteen_bit_integer_i64() {
+    let input_base: i32= 97;
+    let input_digits = &[3, 46, 60];
+    let output_base = 73;
+    let output_digits = vec![6, 10, 45];
+    assert_eq!(
+        ayb::convert(input_digits, input_base, output_base),
+        Ok(output_digits)
+    );
+}
+
+#[test]
 fn empty_list() {
     let input_base = 2;
     let input_digits = &[];
@@ -196,5 +208,30 @@ fn output_base_is_zero() {
     assert_eq!(
         ayb::convert(input_digits, input_base, output_base),
         Err(ayb::Error::InvalidOutputBase)
+    );
+}
+
+#[test]
+fn test_number_close_to_unsigned_max() {
+    let input_base: u16 = 2;
+    let input_digits = &[1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1];
+    let output_base = 10;
+    let output_digits = vec![6,5,4,0,7];
+    assert_eq!(
+        ayb::convert(input_digits, input_base, output_base),
+        Ok(output_digits)
+    );
+}
+
+
+#[test]
+fn test_signed_number_close_to_signed_max() {
+    let input_base: i16 = 2;
+    let input_digits = &[0,1,1,1, 1,1,1,1, 1,1,1,1, 1,0,1,1];
+    let output_base = 10;
+    let output_digits = vec![3,2,7,6,3];
+    assert_eq!(
+        ayb::convert(input_digits, input_base, output_base),
+        Ok(output_digits)
     );
 }
