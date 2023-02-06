@@ -152,19 +152,17 @@ struct ScaleIterator<'a> {
 
 impl ScaleIterator<'_> {
     pub fn new<'a>(tonic: &str, intervals: &'a str) -> Result<ScaleIterator<'a>, Error> {
-        if let Ok(tonic) = Tonic::from_str(tonic) {
-            let scale = match (tonic.note, tonic.key) {
-                (C, Major) | (G, Major) | (D, Major) | (A, _) | (E, Major) | (B, Major) |
-                (Fsharp, Major) | (E, Minor) | (B, Minor) | (Fsharp, Minor) |
-                (Csharp, Minor) | (Gsharp, Minor) | (Dsharp, Minor) => SHARPS,
-                _ => FLATS
-            };
+        let tonic = Tonic::from_str(tonic)?;
 
-            if let Some(index) = scale.iter().position(|n| tonic.note == *n) {
-                Ok(ScaleIterator { index, scale, intervals, interval_index: 0 })
-            } else {
-                Err(Error::BadNote)
-            }
+        let scale = match (tonic.note, tonic.key) {
+            (C, Major) | (G, Major) | (D, Major) | (A, _) | (E, Major) | (B, Major) |
+            (Fsharp, Major) | (E, Minor) | (B, Minor) | (Fsharp, Minor) |
+            (Csharp, Minor) | (Gsharp, Minor) | (Dsharp, Minor) => SHARPS,
+            _ => FLATS
+        };
+
+        if let Some(index) = scale.iter().position(|n| tonic.note == *n) {
+            Ok(ScaleIterator { index, scale, intervals, interval_index: 0 })
         } else {
             Err(Error::BadNote)
         }
@@ -201,12 +199,8 @@ pub struct Scale<'a> {
 
 impl Scale<'_> {
     pub fn new<'a>(tonic: &'a str, intervals: &'a str) -> Result<Scale<'a>, Error> {
-        match ScaleIterator::new(tonic, intervals) {
-            Ok(iterator) => Ok(
-                Scale { iterator }
-            ),
-            Err(error) => Err(error)
-        }
+        let iterator = ScaleIterator::new(tonic, intervals)?;
+        Ok(Scale { iterator })
     }
 
     pub fn chromatic<'a>(tonic: &'a str) -> Result<Scale<'a>, Error> {
