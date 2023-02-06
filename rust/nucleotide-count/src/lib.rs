@@ -1,27 +1,16 @@
 use std::collections::HashMap;
 
-static NUCLEOTIDES: [char; 4] = ['C', 'T', 'A', 'G'];
-
 pub fn count(nucleotide: char, dna: &str) -> Result<usize, char> {
-    if !NUCLEOTIDES.contains(&nucleotide) {
-        return Err(nucleotide);
-    }
+    let mut counts = nucleotide_counts(dna)?;
 
-    if let Some(bad_nucleotide_in_sequence) = dna.chars().find(|n| !NUCLEOTIDES.contains(n)) {
-        return Err(bad_nucleotide_in_sequence);
-    }
-
-    Ok(dna.chars().filter(|&n| nucleotide == n).count())
+    counts.remove(&nucleotide).ok_or(nucleotide)
 }
 
 pub fn nucleotide_counts(dna: &str) -> Result<HashMap<char, usize>, char> {
-    let mut counts = HashMap::with_capacity(NUCLEOTIDES.len());
+    let mut counts = HashMap::from([('C', 0), ('T', 0), ('A', 0), ('G', 0)]);
 
-    for nucleotide in NUCLEOTIDES {
-        match count(nucleotide, dna) {
-            Ok(count) => counts.insert(nucleotide, count),
-            Err(nucleotide) => return Err(nucleotide),
-        };
+    for nucleotide in dna.chars() {
+        counts.get_mut(&nucleotide).map(|count| *count += 1).ok_or(nucleotide)?
     }
 
     Ok(counts)
