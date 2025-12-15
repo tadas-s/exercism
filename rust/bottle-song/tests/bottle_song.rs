@@ -15,7 +15,6 @@ fn first_generic_verse() {
 }
 
 #[test]
-#[ignore]
 fn last_generic_verse() {
     assert_eq!(
         recite(3, 1).trim(),
@@ -29,7 +28,6 @@ fn last_generic_verse() {
 }
 
 #[test]
-#[ignore]
 fn verse_with_2_bottles() {
     assert_eq!(
         recite(2, 1).trim(),
@@ -43,7 +41,6 @@ fn verse_with_2_bottles() {
 }
 
 #[test]
-#[ignore]
 fn verse_with_1_bottle() {
     assert_eq!(
         recite(1, 1).trim(),
@@ -57,7 +54,6 @@ fn verse_with_1_bottle() {
 }
 
 #[test]
-#[ignore]
 fn first_two_verses() {
     assert_eq!(
         recite(10, 2).trim(),
@@ -76,7 +72,6 @@ fn first_two_verses() {
 }
 
 #[test]
-#[ignore]
 fn last_three_verses() {
     assert_eq!(
         recite(3, 3).trim(),
@@ -100,7 +95,6 @@ fn last_three_verses() {
 }
 
 #[test]
-#[ignore]
 fn all_verses() {
     assert_eq!(
         recite(10, 10).trim(),
