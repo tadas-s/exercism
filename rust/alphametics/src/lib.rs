@@ -73,11 +73,7 @@ pub fn solve(input: &str) -> Option<HashMap<char, u8>> {
                 continue;
             }
 
-            return Some(
-                HashMap::from_iter(
-                    mapping.iter().map(|(&&character, &b)| (character, b))
-                )
-            );
+            return Some(mapping.iter().map(|(&&character, &b)| (character, b)).collect());
         }
     }
 
