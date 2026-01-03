@@ -16,10 +16,10 @@ impl Num {
     fn to_u64(&self, mapping: &HashMap<&char, u8>) -> u64 {
         self.digits
             .iter()
-            .map(|&d| mapping[&d].to_string())
-            .collect::<String>()
-            .parse::<u64>()
-            .unwrap()
+            .rev()
+            .enumerate()
+            .map(|(i, &d)| (mapping[&d] as u64) * 10u64.pow(i as u32) )
+            .sum()
     }
 }
 
