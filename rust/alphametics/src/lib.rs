@@ -13,7 +13,7 @@ impl Num {
         }
     }
 
-    fn to_u64(&self, mapping: &HashMap<char, u8>) -> u64 {
+    fn to_u64(&self, mapping: &HashMap<&char, u8>) -> u64 {
         self.digits
             .iter()
             .map(|&d| mapping[&d].to_string())
@@ -62,7 +62,7 @@ pub fn solve(input: &str) -> Option<HashMap<char, u8>> {
     let (sum_members, final_sum) = parse_input_into_nums(input);
 
     for v in (0..=9u8).rev().permutations(unique_digits.len()) {
-        let mapping: HashMap<char, u8> = zip(unique_digits.clone(), v).collect();
+        let mapping: HashMap<&char, u8> = zip(&unique_digits, v).collect();
 
         let variant_sum = sum_members.iter().map(|m| m.to_u64(&mapping)).sum::<u64>();
         let variant_final_sum = final_sum.to_u64(&mapping);
@@ -73,7 +73,11 @@ pub fn solve(input: &str) -> Option<HashMap<char, u8>> {
                 continue;
             }
 
-            return Some(mapping);
+            return Some(
+                HashMap::from_iter(
+                    mapping.iter().map(|(&&character, &b)| (character, b))
+                )
+            );
         }
     }
 
