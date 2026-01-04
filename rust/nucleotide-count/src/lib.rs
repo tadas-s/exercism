@@ -1,9 +1,20 @@
 use std::collections::HashMap;
 
 pub fn count(nucleotide: char, dna: &str) -> Result<usize, char> {
-    todo!("How much of nucleotide type '{nucleotide}' is contained inside DNA string '{dna}'?");
+    let mut counts = nucleotide_counts(dna)?;
+
+    counts.remove(&nucleotide).ok_or(nucleotide)
 }
 
 pub fn nucleotide_counts(dna: &str) -> Result<HashMap<char, usize>, char> {
-    todo!("How much of every nucleotide type is contained inside DNA string '{dna}'?");
+    let mut counts: HashMap<char, usize> = [('C', 0), ('T', 0), ('A', 0), ('G', 0)].into();
+
+    for nucleotide in dna.chars() {
+        counts
+            .get_mut(&nucleotide)
+            .map(|count| *count += 1)
+            .ok_or(nucleotide)?
+    }
+
+    Ok(counts)
 }
