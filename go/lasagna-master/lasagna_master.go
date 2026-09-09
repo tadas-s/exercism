@@ -1,18 +1,48 @@
 package lasagnamaster
 
-// TODO: define the 'PreparationTime()' function
+func PreparationTime(layers []string, time int) int {
+	if time == 0 {
+		time = 2
+	}
 
-// TODO: define the 'Quantities()' function
+	return len(layers) * time
+}
 
-// TODO: define the 'AddSecretIngredient()' function
+func Quantities(layers []string) (int, float64) {
+	noodleLayers := 0
+	sauceLayers := 0
 
-// TODO: define the 'ScaleRecipe()' function
+	for _, layer := range layers {
+		if layer == "noodles" {
+			noodleLayers++
+		} else if layer == "sauce" {
+			sauceLayers++
+		}
+	}
 
-// Your first steps could be to read through the tasks, and create
-// these functions with their correct parameter lists and return types.
-// The function body only needs to contain `panic("")`.
-//
-// This will make the tests compile, but they will fail.
-// You can then implement the function logic one by one and see
-// an increasing number of tests passing as you implement more
-// functionality.
+	return noodleLayers * 50, float64(sauceLayers) * 0.2
+}
+
+func AddSecretIngredient(friendsList, myList []string) {
+	if len(myList) < 1 {
+		return
+	}
+
+	if myList[len(myList)-1] == "?" {
+		if len(friendsList) < 1 {
+			return
+		}
+
+		myList[len(myList)-1] = friendsList[len(friendsList)-1]
+	}
+}
+
+func ScaleRecipe(quantities []float64, portions int) []float64 {
+	result := make([]float64, len(quantities))
+
+	for i, quantity := range quantities {
+		result[i] = quantity / 2 * float64(portions)
+	}
+
+	return result
+}
