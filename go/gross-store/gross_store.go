@@ -2,25 +2,64 @@ package gross
 
 // Units stores the Gross Store unit measurements.
 func Units() map[string]int {
-	panic("Please implement the Units() function")
+	return map[string]int{
+		"quarter_of_a_dozen": 3,
+		"half_of_a_dozen":    6,
+		"dozen":              12,
+		"small_gross":        120,
+		"gross":              144,
+		"great_gross":        1728,
+	}
 }
 
 // NewBill creates a new bill.
 func NewBill() map[string]int {
-	panic("Please implement the NewBill() function")
+	return map[string]int{}
 }
 
 // AddItem adds an item to customer bill.
 func AddItem(bill, units map[string]int, item, unit string) bool {
-	panic("Please implement the AddItem() function")
+	quantityToAdd, validUnit := units[unit]
+
+	if !validUnit {
+		return false
+	}
+
+	bill[item] += quantityToAdd
+
+	return true
 }
 
 // RemoveItem removes an item from customer bill.
 func RemoveItem(bill, units map[string]int, item, unit string) bool {
-	panic("Please implement the RemoveItem() function")
+	quantityToRemove, validUnit := units[unit]
+
+	if !validUnit {
+		return false
+	}
+
+	currentQuantity, itemExists := bill[item]
+
+	if !itemExists {
+		return false
+	}
+
+	remainder := currentQuantity - quantityToRemove
+
+	if remainder > 0 {
+		bill[item] = remainder
+		return true
+	} else if remainder == 0 {
+		delete(bill, item)
+		return true
+	}
+
+	return false
 }
 
 // GetItem returns the quantity of an item that the customer has in his/her bill.
 func GetItem(bill map[string]int, item string) (int, bool) {
-	panic("Please implement the GetItem() function")
+	quantity, exists := bill[item]
+
+	return quantity, exists
 }
