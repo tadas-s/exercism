@@ -1,0 +1,38 @@
+{
+  "authors": [
+    "zilkey"
+  ],
+  "contributors": [
+    "aarti",
+    "alebaffa",
+    "bitfield",
+    "ekingery",
+    "ferhatelmas",
+    "hilary",
+    "kytrinyx",
+    "leenipper",
+    "mkoppmann",
+    "petertseng",
+    "robphoenix",
+    "sebito91",
+    "strangeman",
+    "tleen",
+    "tompao",
+    "eklatzer"
+  ],
+  "files": {
+    "solution": [
+      "allergies.go"
+    ],
+    "test": [
+      "allergies_test.go",
+      "cases_test.go"
+    ],
+    "example": [
+      ".meta/example.go"
+    ]
+  },
+  "blurb": "Given a person's allergy score, determine whether or not they're allergic to a given item, and their full list of allergies.",
+  "source": "Exercise by the JumpstartLab team for students at The Turing School of Software and Design.",
+  "source_url": "https://www.turing.edu/"
+}
