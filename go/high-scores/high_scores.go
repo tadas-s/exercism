@@ -1,28 +1,42 @@
 package highscores
 
-type HighScores struct{}
+import (
+	"cmp"
+	"slices"
+)
+
+type HighScores struct {
+	scores []int
+}
 
 // NewHighScores returns a new HighScores object.
 func NewHighScores(scores []int) *HighScores {
-	panic("Please implement the NewHighScores function")
+	return &HighScores{scores: scores}
 }
 
 // Scores returns all the scores.
 func (s *HighScores) Scores() []int {
-	panic("Please implement the Scores function")
+	return s.scores
 }
 
 // Latest returns the latest (last) score.
 func (s *HighScores) Latest() int {
-	panic("Please implement the Latest function")
+	return s.scores[len(s.scores)-1]
 }
 
 // PersonalBest returns the best (highest) score.
 func (s *HighScores) PersonalBest() int {
-	panic("Please implement the PersonalBest function")
+	return slices.Max(s.scores)
 }
 
 // TopThree returns the top three scores.
 func (s *HighScores) TopThree() []int {
-	panic("Please implement the TopThree function")
+	sorted := make([]int, len(s.scores))
+	copy(sorted, s.scores)
+
+	slices.SortFunc(sorted, func(a, b int) int {
+		return cmp.Compare(b, a)
+	})
+
+	return sorted[0:min(3, len(sorted))]
 }
