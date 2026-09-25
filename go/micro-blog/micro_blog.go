@@ -1,5 +1,6 @@
 package microblog
 
 func Truncate(phrase string) string {
-	panic("Please implement the Truncate function")
+	runes := []rune(phrase)
+	return string(runes[0:min(5, len(runes))])
 }
