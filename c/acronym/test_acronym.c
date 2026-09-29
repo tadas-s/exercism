@@ -1,21 +1,24 @@
-#include "vendor/unity.h"
-#include "../src/acronym.h"
+#include "test-framework/unity.h"
+#include "acronym.h"
 #include <stdlib.h>
 #include <string.h>
 
+static char *actual = NULL;
 void setUp(void)
 {
 }
 
 void tearDown(void)
 {
+   if (actual)
+      free(actual);
+   actual = NULL;
 }
 
 static void check_abbreviation(char *phrase, char *expected)
 {
-   char *actual = abbreviate(phrase);
+   actual = abbreviate(phrase);
    TEST_ASSERT_EQUAL_STRING(expected, actual);
-   free(actual);
 }
 
 static void test_null_string(void)
@@ -70,7 +73,7 @@ static void test_punctuation_without_whitespace(void)
 static void test_long_abbreviation(void)
 {
    char *phrase = "Rolling On The Floor Laughing So Hard "
-       "That My Dogs Came Over And Licked Me";
+                  "That My Dogs Came Over And Licked Me";
    char *expected = "ROTFLSHTMDCOALM";
    check_abbreviation(phrase, expected);
 }
@@ -98,7 +101,7 @@ static void test_underscore_emphasis(void)
 
 int main(void)
 {
-   UnityBegin("test/test_acronym.c");
+   UNITY_BEGIN();
 
    RUN_TEST(test_null_string);
    RUN_TEST(test_empty_string);
@@ -112,5 +115,5 @@ int main(void)
    RUN_TEST(test_apostrophes);
    RUN_TEST(test_underscore_emphasis);
 
-   return UnityEnd();
+   return UNITY_END();
 }
