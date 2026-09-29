@@ -1,15 +1,35 @@
-// This is a "stub" file.  It's a little start on your solution.
-// It's not a complete solution though; you have to write some code.
-
-// Package acronym should have a package comment that summarizes what it's about.
-// https://golang.org/doc/effective_go.html#commentary
 package acronym
 
-// Abbreviate should have a comment documenting it.
+import (
+	"strings"
+	"unicode"
+)
+
+type scanState int
+
+const (
+	stateSeparator scanState = iota
+	stateWord
+)
+
+// Abbreviate returns abbreviation/acronym of a phrase
 func Abbreviate(s string) string {
-	// Write some code here to pass the test suite.
-	// Then remove all the stock comments.
-	// They're here to help you get started but they only clutter a finished solution.
-	// If you leave them in, reviewers may protest!
-	return ""
+	var abbreviation strings.Builder
+	state := stateSeparator
+
+	for _, c := range s {
+		switch state {
+		case stateSeparator:
+			if unicode.IsLetter(c) {
+				abbreviation.WriteRune(unicode.ToUpper(c))
+				state = stateWord
+			}
+		case stateWord:
+			if !unicode.IsLetter(c) && c != '\'' {
+				state = stateSeparator
+			}
+		}
+	}
+
+	return abbreviation.String()
 }
